@@ -34,12 +34,21 @@
         <form action="{{ route('forgot.password.send') }}" method="POST" class="space-y-4">
             @csrf
             <div>
-                <label for="whatsapp" class="block mb-1">Nomor Telepon:</label>
-                <input type="text" name="whatsapp" id="phone" class="w-full border rounded px-3 py-2"
-                    placeholder="Contoh: 6285745768593" value="{{ old('phone') }}" required>
+                <label for="email" class="block mb-1">Email: </label>
+                <input type="email" name="email" id="email" class="w-full border rounded px-3 py-2"
+                    placeholder="Contoh: example@gmail.com" value="{{ old('email') }}" required>
             </div>
-            <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 ">Kirim Password
-                Baru</button>
+            <div>
+                <label for="password" class="block mb-1">Password Baru: </label>
+                <input type="password" name="password" id="password" class="w-full border rounded px-3 py-2" required>
+            </div>
+            <div>
+                <label for="password_confirmed" class="block mb-1">Konfirmasi Password Baru: </label>
+                <input type="password" name="password_confirmation" id="password_confirmation"
+                    class="w-full border rounded px-3 py-2" required>
+            </div>
+            <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 ">Ubah
+                Password</button>
             <p class="text-center mt-4 text-sm"><a href="{{ route('login') }}"
                     class="text-blue-500 hover:underline transition">Kembali ke login</a></p>
         </form>

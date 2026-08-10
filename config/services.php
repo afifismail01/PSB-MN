@@ -34,10 +34,6 @@ return [
         ],
     ],
 
-    'fonnte' => [
-        'token' => env('FONNTE_TOKEN'),
-    ],
-
     'edupay' => [
         'secretkey' => env('EDUPAY_SECRET_KEY'),
     ],

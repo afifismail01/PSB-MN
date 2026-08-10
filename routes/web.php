@@ -127,7 +127,7 @@ Route::get('/debug-edupay/{id}', function ($id) {
     }
 });
 
-Route::get('/tes-syncpayment', function() {
+Route::get('/tes-syncpayment', function () {
     Artisan::call('app:sync-payments');
     Log::info('CORN Berjalan dengan baik');
     return 'Command dijalankan';

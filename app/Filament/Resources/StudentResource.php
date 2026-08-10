@@ -25,7 +25,6 @@ use Filament\Tables\Actions\Action;
 // use Filament\Tables\Columns\DateColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\Facades\Http;
 use Filament\Notifications\Notification;
 
 class StudentResource extends Resource
@@ -123,33 +122,7 @@ class StudentResource extends Resource
                     ->url(route('admin.students.export.pdf'), true)
                     ->color('danger'),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-                Action::make('resend_account_info')
-                    ->label('Kirim Ulang Info Akun')
-                    ->icon('heroicon-o-paper-airplane')
-                    ->color('success')
-                    ->requiresConfirmation()
-                    ->action(function ($record) {
-                        $phone = $record->user->whatsapp;
-                        if (!$phone) {
-                            Notification::make()->title('Gagal Mengirim')->body('Nomor Whatsapp Calon Siswa Tidak Ditemukan')->danger()->send();
-                            return;
-                        }
-                        $message = "Assalamu'alaikum,\n" . "Berikut adalah informasi akun siswa anda: \n" . "Email: {$record->user->email}\n" . "Nomor Telepon: {$record->user->whatsapp}\n" . "Silahkan pergi ke halaman https://registrasi.miftahunnajah.sch.id/login dan klik 'Lupa Password' jika anda belum bisa login. \n" . 'terimakasih';
-                        $response = Http::withHeaders([
-                            'Authorization' => env('FONNTE_TOKEN'),
-                        ])
-                            ->asForm()
-                            ->post('https://api.fonnte.com/send', ['target' => $phone, 'message' => $message, 'countryCode' => '62']);
-                        if ($response->successful()) {
-                            Notification::make()->title('Pesan Terkirim')->body('Informasi akun berhasil dikirim ulang.')->success()->send();
-                        } else {
-                            Notification::make()->title('Pesan Gagal Terkirim')->body('Terjadi kesalahan saat mengirim pesan')->danger()->send();
-                        }
-                    }),
-            ])
+            ->actions([Tables\Actions\EditAction::make(), Tables\Actions\DeleteAction::make()])
             ->bulkActions([Tables\Actions\BulkActionGroup::make([Tables\Actions\DeleteBulkAction::make()])]);
     }
 
