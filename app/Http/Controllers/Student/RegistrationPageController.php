@@ -154,7 +154,7 @@ class RegistrationPageController extends Controller
             'special_needs' => resolveOtherField('special_needs', $request),
             'disability' => resolveOtherField('disability', $request),
         ]);
-         // Validasi data
+        // Validasi data
         $validated = $request->validate(
             [
                 'name' => ['required', 'string', 'max:255'],
@@ -204,7 +204,7 @@ class RegistrationPageController extends Controller
                 // 'previous_school.required' => 'Kolom sekolah asal harus diisi',
                 // 'previous_school_npsn.required' => 'Kolom npsn sekolah asal harus diisi',
                 'previous_school_npsn.regex' => 'Pastikan jumlah karakter dalam npsn sekolah asal berjumlah 8 karakter',
-                'kip_number.digits' => 'Pastikan jumlah digit dalam nomor KIP berjumlah 12 digit',
+                'kip_number.digits' => 'Pastikan jumlah digit dalam nomor KIP berjumlah 16 digit',
                 'kip_year.digits' => 'Pastikan jumlah digit dalam tahun KIP berjumlah 4 digit',
                 'birth_date.required' => 'Kolom tanggal lahir harus diisi',
                 'birth_date.after_or_equal' => 'Tanggal hanya bisa diinput mulai dari 2010 hingga hari ini',
