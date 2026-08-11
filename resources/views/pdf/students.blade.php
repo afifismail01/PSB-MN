@@ -9,21 +9,24 @@
     <style>
         body {
             font-family: sans-serif;
-            font-size: 10px;
+            font-size: 7px;
         }
 
         table {
             width: 100%;
+            table-layout: fixed;
             border-collapse: collapse;
         }
 
         th,
         td {
             border: 1px solid #000;
-            padding: 6px;
+            padding: 2px;
             text-align: left;
             vertical-align: top;
-            white-space: normal;
+            /* white-space: normal; */
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         th {
@@ -88,7 +91,7 @@
                     <td>{{ $student->citizenship->value ?? '-' }}</td>
                     <td>{{ $student->national_id_number }}</td>
                     <td>{{ $student->birth_place }}</td>
-                    <td>{{ $student->birth_date->format('d-m-Y') }}</td>
+                    <td>{{ $student->birth_date ? $student->birth_date->format('d-m-Y') : '-' }}</td>
                     <td>{{ $student->gender->value ?? '-' }}</td>
                     <td>{{ $student->siblings_count }}</td>
                     <td>{{ $student->child_number }}</td>
