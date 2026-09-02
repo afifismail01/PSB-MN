@@ -21,7 +21,7 @@ class Student extends Model
         // 'special_needs' => \App\Enums\SpecialNeedsEnum::class,
     ];
 
-    protected $fillable = ['name', 'birth_date', 'birth_place', 'gender', 'national_id_number', 'admission_track', 'education_level', 'status','nis', 'nisn', 'siblings_count', 'child_number', 'religion', 'phone_number', 'email', 'previous_school', 'previous_school_npsn', 'kip_number', 'kip_year', 'family_card_number', 'family_head_name', 'citizenship', 'disability', 'education_funding', 'future_goal', 'hobby', 'special_needs', 'user_id', 'payment_id'];
+    protected $fillable = ['name', 'birth_date', 'birth_place', 'gender', 'national_id_number', 'admission_track', 'education_level', 'status', 'nis', 'nisn', 'siblings_count', 'child_number', 'religion', 'phone_number', 'email', 'previous_school', 'previous_school_npsn', 'kip_number', 'kip_year', 'family_card_number', 'family_head_name', 'citizenship', 'disability', 'education_funding', 'future_goal', 'hobby', 'special_needs', 'user_id', 'payment_id'];
 
     public function user()
     {

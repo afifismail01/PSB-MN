@@ -6,6 +6,7 @@ enum StudentStatusEnum: string
     case ACCEPTED = 'Diterima';
     case DENIED = 'Ditolak';
     case RESERVES = 'Cadangan';
+    case UNDETERMINED = 'Belum ditentukan';
 
     public static function values(): array
     {

@@ -4,7 +4,7 @@
     <div class="p-6 max-w-4xl mx-auto">
         <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-xl p-4 mb-4">
             <h1 class="text-xl font-semibold mb-4">Halaman Administrasi</h1>
-            @if ($activeStage?->stage_name !== App\Enums\StageNameEnum::REGISTRATION)
+            {{-- @if ($activeStage?->stage_name !== App\Enums\StageNameEnum::REGISTRATION)
                 <div class="bg-red-100 text-red-700 p-4 mb-4 flex flex-col rounded-md items-center text-center">
                     <div class="text-4xl mb-2">
                         <i data-lucide="lock"></i>
@@ -13,8 +13,10 @@
                     <p>Tahapan saat ini adalah : <span class="font-bold">{{ $activeStage->stage_name ?? '-' }}</span>,
                         pembayaran tidak
                         diperbolehkan.</p>
-                </div>
-            @elseif($activeStage?->stage_name === App\Enums\StageNameEnum::REGISTRATION)
+                </div> --}}
+            @if (
+                $activeStage?->stage_name === App\Enums\StageNameEnum::REGISTRATION ||
+                    $activeStage?->stage_name === App\Enums\StageNameEnum::ANNOUNCEMENT)
                 {{-- Status Pembayaran --}}
                 @if ($status === 'pending')
                     <div class="bg-red-100 text-red-700 px-4 py-2 rounded mb-4 inline-block">Pembayaran Masih Dalam Tahap
@@ -137,7 +139,7 @@
                                 @php
                                     $kelas = auth()->user()->payment->kodekelas ?? '';
                                 @endphp
-                
+
                                 @if ($kelas === 'PSB MA')
                                     <a href="https://chat.whatsapp.com/LizPxRUvzJn2zv70A1bjRZ?mode=ac_t" target="_blank"
                                         class="inline-block bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-6 rounded-lg shadow transition">
@@ -148,10 +150,9 @@
                                         class="inline-block bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-6 rounded-lg shadow transition">
                                         Gabung Grup WhatsApp MTs
                                     </a>
-                               
                                 @endif
                             </div>
-                                                        @if (session('info'))
+                            @if (session('info'))
                                 <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative text-center"
                                     role="alert">
                                     <span class="block sm:inline">{{ session('info') }}</span>

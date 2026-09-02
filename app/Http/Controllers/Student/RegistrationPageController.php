@@ -45,9 +45,10 @@ class RegistrationPageController extends Controller
         $hobbyList = HobbyEnum::cases();
         $specialNeedList = SpecialNeedsEnum::cases();
 
+        $isAccepted = $student?->status === StudentStatusEnum::ACCEPTED;
         $paidStatus = auth()->user()->payment?->status === 'paid';
         $activeStage = RegistrationStage::where('is_active', true)->first();
-        $disabledForm = !$paidStatus || $activeStage?->stage_name !== StageNameEnum::REGISTRATION;
+        $disabledForm = !$isAccepted || $activeStage?->stage_name !== StageNameEnum::REGISTRATION;
 
         // Mengatur batasan input tanggal lahir
 
@@ -64,21 +65,23 @@ class RegistrationPageController extends Controller
             ->toArray();
         $maxDate = Carbon::today()->toDateString();
 
-        return view('student.registration.personal_data', compact('levelList', 'trackList', 'activeStage', 'paidStatus', 'disabledForm', 'student', 'educationLevels', 'maxDate', 'educationFundingList'));
+        return view('student.registration.personal_data', compact('levelList', 'trackList', 'activeStage', 'paidStatus', 'disabledForm', 'student', 'educationLevels', 'maxDate', 'educationFundingList', 'isAccepted'));
     }
 
     public function parentData()
     {
         $user = auth()->user();
         $parent = $user->parent; //menggunakan relasi
+        $student = auth()->user()->student;
         $paidStatus = auth()->user()->payment?->status === 'paid';
         $activeStage = RegistrationStage::where('is_active', true)->first();
-        $disabledForm = !$paidStatus || $activeStage?->stage_name !== StageNameEnum::REGISTRATION;
+        $isAccepted = $student?->status === StudentStatusEnum::ACCEPTED;
+        $disabledForm = !$isAccepted || $activeStage?->stage_name !== StageNameEnum::REGISTRATION;
 
         // $minDate = Carbon::now()->subYears(19)->startOfYear()->toDateString();
         // $maxDate = Carbon::today()->toDateString();
 
-        return view('student.registration.parent_data', compact('paidStatus', 'activeStage', 'disabledForm', 'parent', 'user'));
+        return view('student.registration.parent_data', compact('paidStatus', 'activeStage', 'disabledForm', 'parent', 'user', 'isAccepted'));
     }
 
     public function uploadFile()
@@ -131,8 +134,9 @@ class RegistrationPageController extends Controller
     {
         $student = auth()->user()->student;
         $paidStatus = auth()->user()->payment?->status === 'paid';
+        $isAccepted = $student?->status === StudentStatusEnum::ACCEPTED;
         $activeStage = RegistrationStage::where('is_active', true)->first();
-        $disabledForm = !$paidStatus || $activeStage?->stage_name !== StageNameEnum::REGISTRATION;
+        $disabledForm = !$isAccepted || $activeStage?->stage_name !== StageNameEnum::REGISTRATION;
 
         $today = Carbon::today();
         $level = $request->input('education_level', 'MTs'); // default MTs
@@ -217,15 +221,15 @@ class RegistrationPageController extends Controller
                 'citizenship.required' => 'Kolom kewarganegaraan harus diisi',
                 'disability.required' => 'Kolom kebutuhan disabilitas harus diisi',
                 'education_funding.required' => 'Kolom Yang membiayai sekolah harus diisi',
-                'future_goal.required' => 'Kolom cita-cita harus diisi',
+                'future_goal.required' => 'Kolom cita-csita harus diisi',
                 'hobby.required' => 'Kolom hobi harus diisi',
                 'special_needs.required' => 'Kolom kebutuhan khusus harus diisi',
                 // 'postal_code.required' => 'Kode pos harus diisi',
                 // 'address.required' => 'Alamat harus diisi',
             ],
         );
-        if (!$paidStatus || $activeStage?->stage_name !== StageNameEnum::REGISTRATION) {
-            return redirect()->back()->with('error', 'Saat ini Anda tidak dapat mengisi data. Periksa status pembayaran dan tahapan.');
+        if (!$isAccepted || $activeStage?->stage_name !== StageNameEnum::REGISTRATION) {
+            return redirect()->back()->with('error', 'Saat ini Anda belum dapat mengisi data pendaftaran.');
         }
 
         // Simpan ke session
