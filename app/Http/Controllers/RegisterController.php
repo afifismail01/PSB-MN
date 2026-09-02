@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Models\Student;
+use App\Enums\StudentStatusEnum;
 
 class RegisterController extends Controller
 {
@@ -38,6 +40,13 @@ class RegisterController extends Controller
             'email' => $validated['email'],
             'whatsapp' => $validated['whatsapp'],
             'password' => Hash::make($validated['password']),
+        ]);
+
+        // Create empty student record
+        Student::create([
+            'user_id' => $user->id,
+            'name' => $user->name,
+            'status' => StudentStatusEnum::UNDETERMINED,
         ]);
         return redirect()->route('login')->with('success', 'Pendaftaran Berhasil! Silahkan login menggunakan email dan password yang telah Anda buat.');
     }

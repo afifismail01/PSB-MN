@@ -17,16 +17,16 @@ class AnnouncementPageController extends Controller
         $student = $user->student;
 
         // validasi data student
-        if (!$student) {
-            return view('student.announcement_page_error')->with('error', 'Data siswa belum diisi');
-        }
+        // if (!$student) {
+        //     return view('student.announcement_page_error')->with('error', 'Data siswa belum diisi');
+        // }
         // Ambil tahapan aktif
         $activeStage = RegistrationStage::where('is_active', true)->first();
         $stage = $activeStage?->stage_name?->value ?? 'belum_pengumuman';
         return view('student.announcement_page', [
             'name' => $student->name,
-            'nis'  => $student->nis,
-            'status' => $student->status?->value, //diterima, ditolak atau cadangan
+            'nis' => $student->nis,
+            'status' => $student->status?->value, //diterima, ditolak, cadangan atau belum ditentukan
             'stage' => $stage,
         ]);
     }

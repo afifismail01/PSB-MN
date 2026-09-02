@@ -25,20 +25,20 @@
                 <div class="text-4xl mb-2 text-center">
                     <i data-lucide="lock"></i>
                 </div>
-                <p class="font-semibold">Formulir Tidak Bisa Diakses</p>
+                <p class="font-semibold">Formulir Tidak Dapat Diakses</p>
                 <p>Tahapan saat ini adalah : <span class="font-bold">{{ $activeStage->stage_name ?? '-' }}</span>,
                     pengisian formulir
                     pendaftaran tidak
                     diperbolehkan.</p>
             </div>
         @elseif($activeStage?->stage_name === App\Enums\StageNameEnum::REGISTRATION)
-            @if (!$paidStatus)
+            @if (!$isAccepted)
                 <div class="bg-yellow-100 text-yellow-700 p-4 mb-4 flex flex-col items-center rounded-md text-center">
                     <div class="text-4xl mb-2">
                         <i data-lucide="triangle-alert"></i>
                     </div>
-                    <p class="font-semibold">Pembayaran Belum Diterima</p>
-                    <p>Silahkan lakukan pembayaran terlebih dahulu agar dapat mengisi formulir pendaftaran</p>
+                    <p class="font-semibold">Formulir Belum Dapat Diisi</p>
+                    <p>Formulir pendaftaran dapat diisi setelah Anda dinyatakan <strong>Diterima</strong></p>
                 </div>
             @endif
         @endif

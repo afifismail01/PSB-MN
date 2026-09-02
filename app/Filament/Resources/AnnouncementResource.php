@@ -36,19 +36,7 @@ class AnnouncementResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form->schema([Placeholder::make('user_id')
-        ->label('Nama Lengkap')
-        ->content(fn($record) => $record->user->name ?? '-')
-        ->disabled(), 
-        
-        Select::make('status')
-        ->label('Status Seleksi')
-        ->options(StudentStatusEnum::options())
-        ->required(),
-        
-        TextInput::make('nis')
-        ->label('NIS')
-        ->required()]);
+        return $form->schema([Placeholder::make('user_id')->label('Nama Lengkap')->content(fn($record) => $record->user->name ?? '-')->disabled(), Select::make('status')->label('Status Seleksi')->options(StudentStatusEnum::options())->required(), TextInput::make('nis')->label('NIS')->required()]);
     }
 
     public static function table(Table $table): Table
@@ -57,26 +45,30 @@ class AnnouncementResource extends Resource
             ->columns([
                 TextColumn::make('name')->label('Nama Lengkap')->searchable(),
                 TextColumn::make('nis')->label('NIS')->searchable(),
-                TextColumn::make('status')->label('Status Seleksi')->badge()->color(
-                    fn($state) => match ($state->value ?? null) {
+                TextColumn::make('status')->label('Status Seleksi')->badge()->formatStateUsing(fn($state) => $state?->value ?? '')->color(
+                    fn($state) => match ($state?->value ?? null) {
                         'Diterima' => 'success',
                         'Ditolak' => 'danger',
                         'Cadangan' => 'warning',
-                        default => 'secondary',
+                        'Belum Ditentukan' => 'gray',
+                        default => 'gray',
                     },
                 ),
             ])
             ->filters([SelectFilter::make('status')->label('Status Siswa')->options(StudentStatusEnum::options())])
             ->headerActions([
-                Action::make('Export Excel')->label('Export Excel')->icon('heroicon-o-arrow-down-tray')->url(route('admin.announcements.export.excel'), true)// ->action(function () {
-                //     try {
-                //         // memanggil route export excel
-                //         return redirect(route('admin.announcement.export.excel'));
-                //     } catch (\Exception $e) {
-                //         Notification::make()->title('Gagal Export')->body('Terjadi kesalahan saat mencoba mengeksport data. Silahkan coba lagi.')->danger()->presistent()->send();
-                //     }
-                // })
-                ->color('success'),
+                Action::make('Export Excel')
+                    ->label('Export Excel')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->url(route('admin.announcements.export.excel'), true) // ->action(function () {
+                    //     try {
+                    //         // memanggil route export excel
+                    //         return redirect(route('admin.announcement.export.excel'));
+                    //     } catch (\Exception $e) {
+                    //         Notification::make()->title('Gagal Export')->body('Terjadi kesalahan saat mencoba mengeksport data. Silahkan coba lagi.')->danger()->presistent()->send();
+                    //     }
+                    // })
+                    ->color('success'),
                 Action::make('Export PDF')
                     ->label('Export PDF')
                     ->icon('heroicon-o-arrow-down-tray')

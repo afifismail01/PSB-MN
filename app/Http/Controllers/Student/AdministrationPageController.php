@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Payment;
 use App\Models\RegistrationStage;
 use App\Enums\StageNameEnum;
+use App\Enums\StudentStatusEnum;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 // use Xendit\Configuration;
@@ -30,7 +31,7 @@ class AdministrationPageController extends Controller
         $user = auth()->user();
 
         $activeStage = RegistrationStage::where('is_active', true)->first();
-        $disabledForm = $activeStage?->stage_name !== StageNameEnum::REGISTRATION;
+        $disabledForm = !in_array($activeStage?->stage_name, [StageNameEnum::REGISTRATION, StageNameEnum::ANNOUNCEMENT]);
         // Ambil status pembayaran dari relasi pembayaran()
         $status = optional($user->payment)->status;
         // $hasValidPayment = $user->payment && $user->payment->nopendaftaran;
@@ -60,8 +61,8 @@ class AdministrationPageController extends Controller
             'kodejalur' => 'required|in:1,2,3,4,5',
             'kodekelas' => 'required|string',
         ]);
-$kodeJalur = (int) $request->input('kodejalur');
-         //from button or select input
+        $kodeJalur = (int) $request->input('kodejalur');
+        //from button or select input
         $kodeKelas = $request->input('kodekelas');
 
         // Generate no_pendaftaran hanya kalau belum ada atau sebelumnya expired
@@ -71,7 +72,6 @@ $kodeJalur = (int) $request->input('kodejalur');
         }
 
         //Hitung nominal
-        
 
         $nominal = match ($kodeJalur) {
             1 => 250000, //Reguler
@@ -158,31 +158,29 @@ $kodeJalur = (int) $request->input('kodejalur');
                 'idtagihan' => $payment->nopendaftaran, // sesuai mapping Anda
                 'secretkey' => config('services.edupay.secretkey'),
             ]);
-            
+
             // dd([
             // 'status'   => $response->status(),
             // 'headers'  => $response->headers(),
             // 'body'     => $response->body(),
             // 'json'     => $response->json(),
             // ]);
-            
-        //       Log::info('Hit EduPay', [
-        //     'request' => [
-        //         'idtagihan' => $payment->nopendaftaran,
-        //         'secretkey' => config('services.edupay.secretkey'),
-        //     ],
-        //     'status_code' => $response->status(),
-        //     'body' => $response->json(),
-        // ]);
-        
-            
-             logger()->info('EduPay Request', [
+
+            //       Log::info('Hit EduPay', [
+            //     'request' => [
+            //         'idtagihan' => $payment->nopendaftaran,
+            //         'secretkey' => config('services.edupay.secretkey'),
+            //     ],
+            //     'status_code' => $response->status(),
+            //     'body' => $response->json(),
+            // ]);
+
+            logger()->info('EduPay Request', [
                 'idtagihan' => $payment->nopendaftaran,
                 'secretkey' => config('services.edupay.secretkey'),
             ]);
 
-             logger()->info('EduPay Status: ' . $response->status());
-
+            logger()->info('EduPay Status: ' . $response->status());
 
             if ($response->failed()) {
                 return response()->json(
@@ -195,7 +193,7 @@ $kodeJalur = (int) $request->input('kodejalur');
             }
 
             $result = $response->json();
-            
+
             // Default status
             $newStatus = $payment->status;
             $paidAt = null;
@@ -210,15 +208,15 @@ $kodeJalur = (int) $request->input('kodejalur');
             // Jika ada field lunas → cek apakah true / false
             elseif (array_key_exists('lunas', $result)) {
                 if ($result['lunas'] === true) {
-                     $newStatus = 'paid';
-                     $paidAt    = $result['tglbayar'] ?? now();
+                    $newStatus = 'paid';
+                    $paidAt = $result['tglbayar'] ?? now();
                 } else {
                     $newStatus = 'pending';
                 }
             }
-            
+
             // Hidupkan kode ini kembali jika terdapat bug dan matikan dua logika sebelum kode ini
-                    
+
             // if (!empty($result) && isset($result['lunas'])) {
             //     if ($result['lunas']) {
             //         $newStatus = 'paid';
@@ -244,7 +242,7 @@ $kodeJalur = (int) $request->input('kodejalur');
             //     ],
             //     200,
             // );
-            
+
             // arahkan user sesuai status
             if ($newStatus === 'pending' || $newStatus === null) {
                 return redirect()->route('student.tagihan')->with('info', 'Status pembayaran masih pending, silakan lakukan pembayaran.');

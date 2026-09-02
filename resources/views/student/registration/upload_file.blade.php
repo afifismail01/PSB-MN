@@ -29,7 +29,7 @@
                 <div class="text-4xl mb-2">
                     <i data-lucide="lock"></i>
                 </div>
-                <p class="font-semibold">Formulir Tidak Bisa Diakses</p>
+                <p class="font-semibold">Formulir Tidak Dapat Diakses</p>
                 <p>Tahapan saat ini adalah : <span class="font-bold">{{ $activeStage->stage_name ?? '-' }}</span>,
                     pengisian formulir
                     pendaftaran tidak
@@ -57,7 +57,7 @@
                 <div class="mb-4 p-4 bg-yellow-100 border border-yellow-400 text-yellow-800 rounded-md text-sm">
                     <strong>Petunjuk Unggah Berkas Wajib: </strong>
                     <ul class="list-disc list-inside mt-2">
-                        
+
                         <li>Dokumen yang<strong> wajib</strong> untuk diunggah: </li>
                         <ul class="list-disc ml-10 mt-1">
                             <li><strong>Foto Calon Siswa</strong></li>
