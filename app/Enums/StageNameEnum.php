@@ -4,9 +4,10 @@ namespace App\Enums;
 
 enum StageNameEnum: string
 {
-    case REGISTRATION = 'Input data dan Pembayaran';
+    case REGISTRATION = 'Pendaftaran';
     case TEST = 'Tes Ujian Masuk';
     case ANNOUNCEMENT = 'Pengumuman';
+    case RE_REGISTRATION = 'Daftar Ulang';
 
     public static function options(): array
     {

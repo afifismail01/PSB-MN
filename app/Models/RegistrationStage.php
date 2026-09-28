@@ -8,6 +8,11 @@ use App\Enums\StageNameEnum;
 class RegistrationStage extends Model
 {
     protected $table = 'registration_stages';
-    protected $fillable = ['stage_name', 'start_date', 'end_date', 'is_active'];
+    protected $fillable = ['stage_name', 'start_date', 'end_date', 'is_active', 'admission_period_id'];
     protected $casts = ['stage_name' => StageNameEnum::class, 'start_date' => 'date', 'end_date' => 'date', 'is_active' => 'boolean'];
+
+    public function admissionPeriod()
+    {
+        return $this->belongsTo(AdmissionPeriod::class);
+    }
 }
